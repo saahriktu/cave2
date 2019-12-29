@@ -1,4 +1,17 @@
+ifeq ($(prefix),)
+	prefix=/usr/local
+endif
+ifeq ($(datadir),)
+	datadir=$(prefix)/share
+endif
+ifeq ($(shell which $(CC)),)
+	CC=gcc
+endif
 all:
-	gcc -o cave2 cave2.c
+	$(CC) $(CFLAGS) -o cave2 cave2.c
+	strip -S cave2
 install:
-	cp cave2 /usr/games
+	if [ ! -d "$(DESTDIR)$(prefix)/games" ]; then mkdir -p $(DESTDIR)$(prefix)/games; fi
+	install -m755 cave2 $(DESTDIR)$(prefix)/games
+clean:
+	rm cave2
